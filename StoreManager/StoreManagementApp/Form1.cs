@@ -34,6 +34,10 @@ namespace StoreManagementApp
                                 Console.WriteLine(" -- ADDRESS = {0}", attribute.Value);
                                 tbStoreAddress.Text = attribute.Value;
                                 break;
+                            case "uuid":
+                                Console.WriteLine(" -- UUID = {0}", attribute.Value);
+                                tbUUID.Text = attribute.Value;
+                                break;
                         }
                     }
                 }
@@ -200,6 +204,7 @@ namespace StoreManagementApp
                     tbPostTestResponse.Text = "";
                     NameValueCollection command = new NameValueCollection()
                     {
+                        { "id", tbUUID.Text },
                         { "del", product },
                     };
                     client.UploadValuesAsync(new System.Uri("http://" + tbStoreAddress.Text.ToString()), "POST", command);
@@ -213,7 +218,15 @@ namespace StoreManagementApp
 
         private void httpClient_PostComplete(object sender, UploadValuesCompletedEventArgs e)
         {
-            string result = System.Text.Encoding.UTF8.GetString(e.Result);
+            string result = "";
+            try
+            {
+                result = System.Text.Encoding.UTF8.GetString(e.Result);
+            }
+            catch(Exception ex)
+            {
+                result = ex.Message;
+            }
             tbPostTestResponse.Text += result;
             populateServerView();
             populateHistoryView();
@@ -411,6 +424,19 @@ namespace StoreManagementApp
                 m_selectedRow = -1;
                 btnDelete.Enabled = false;
             }
+        }
+
+        private void btnGenerateUUID_Click(object sender, EventArgs e)
+        {
+            if(!tbUUID.Text.Equals(""))
+            {
+                if (MessageBox.Show("This Manager already has a UUID - if you change it you will have to have your symbol store administrator register your new UUID", "Confirm Change", MessageBoxButtons.OKCancel) != System.Windows.Forms.DialogResult.OK)
+                    return;
+            }
+            Guid uuid = Guid.NewGuid();
+            m_settings.Set("[Default]", "UUID", uuid.ToString());
+            m_settings.SaveSettings();
+            tbUUID.Text = uuid.ToString().ToUpper();
         }
     }
 }

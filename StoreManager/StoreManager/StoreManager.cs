@@ -33,6 +33,7 @@ namespace StoreManager
         private Queue<StoreJob> m_jobQueue;
         private List<StoreJob> m_completedList;
         private List<Tuple<String, String>> m_pathMap;
+        private List<String> m_registeredManagers;
         private SmtpClient m_mailClient;
         private String m_mailRecipient;
         private String m_mailSender;
@@ -147,6 +148,28 @@ namespace StoreManager
             m_jobQueue = syncedQueue;
         }
 
+        private void readRegTxt()
+        {
+            StreamReader reader = new StreamReader(m_storePath + "\\reg.txt");
+            String id = reader.ReadLine();
+            while(id != null && !id.Equals(""))
+            {
+                m_registeredManagers.Add(id);
+                id = reader.ReadLine();
+            }
+            reader.Close();
+        }
+
+        public bool CheckID(String id)
+        {
+            foreach(String manager in m_registeredManagers)
+            {
+                if (manager.Equals(id))
+                    return true;
+            }
+            return false;
+        }
+
         private bool initializeComponents()
         {
             m_log = new CLog();
@@ -170,6 +193,8 @@ namespace StoreManager
 
             m_completedList = new List<StoreJob>();
 
+            m_registeredManagers = new List<String>();
+
             try
             {
                 m_watcher = new FileSystemWatcher(@m_watchPath);
@@ -190,6 +215,8 @@ namespace StoreManager
 
             String[] temp = m_watchPath.Split('\\');
             m_depth = temp.Length;
+
+            readRegTxt();
 
             return true;
         }

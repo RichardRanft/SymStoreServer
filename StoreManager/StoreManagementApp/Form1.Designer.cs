@@ -59,6 +59,9 @@
             this.label2 = new System.Windows.Forms.Label();
             this.tbStoreAddress = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.tbUUID = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.btnGenerateUUID = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tPageVersion.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewServer)).BeginInit();
@@ -197,6 +200,9 @@
             // 
             // tPageStore
             // 
+            this.tPageStore.Controls.Add(this.btnGenerateUUID);
+            this.tPageStore.Controls.Add(this.label3);
+            this.tPageStore.Controls.Add(this.tbUUID);
             this.tPageStore.Controls.Add(this.btnFetchJobCount);
             this.tPageStore.Controls.Add(this.lblPendingJobCount);
             this.tPageStore.Controls.Add(this.dataGridViewHistory);
@@ -348,6 +354,33 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Symbol Store Address";
             // 
+            // tbUUID
+            // 
+            this.tbUUID.Location = new System.Drawing.Point(464, 23);
+            this.tbUUID.Name = "tbUUID";
+            this.tbUUID.ReadOnly = true;
+            this.tbUUID.Size = new System.Drawing.Size(323, 20);
+            this.tbUUID.TabIndex = 13;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(461, 7);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(128, 13);
+            this.label3.TabIndex = 14;
+            this.label3.Text = "Symbol Store Manager ID";
+            // 
+            // btnGenerateUUID
+            // 
+            this.btnGenerateUUID.Location = new System.Drawing.Point(793, 21);
+            this.btnGenerateUUID.Name = "btnGenerateUUID";
+            this.btnGenerateUUID.Size = new System.Drawing.Size(75, 23);
+            this.btnGenerateUUID.TabIndex = 15;
+            this.btnGenerateUUID.Text = "Generate";
+            this.btnGenerateUUID.UseVisualStyleBackColor = true;
+            this.btnGenerateUUID.Click += new System.EventHandler(this.btnGenerateUUID_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -403,6 +436,9 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btnFetchJobCount;
         private System.Windows.Forms.Label lblPendingJobCount;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox tbUUID;
+        private System.Windows.Forms.Button btnGenerateUUID;
     }
 }
 

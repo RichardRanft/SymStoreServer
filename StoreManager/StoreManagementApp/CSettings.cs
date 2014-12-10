@@ -190,6 +190,7 @@ namespace StoreManagementApp
                         }
                     }
                 }
+                m_dirty = false;
             }
             return true;
         }
@@ -218,7 +219,16 @@ namespace StoreManagementApp
                         }
                     }
                     section.Value.Add(attribute);
+                    m_dirty = true;
                 }
+            }
+            if(!m_dirty)
+            {
+                KeyValuePair<String, List<KeyValuePair<String, String>>> newSection = new KeyValuePair<String, List<KeyValuePair<String, String>>>(sectionName, new List<KeyValuePair<string,string>>());
+                KeyValuePair<String, String> newAttribute = new KeyValuePair<String, String>(key, value);
+                m_attributeList.Add(newSection);
+                newSection.Value.Add(newAttribute);
+                m_dirty = true;
             }
             return true;
         }

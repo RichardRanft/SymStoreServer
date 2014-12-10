@@ -147,6 +147,22 @@ namespace StoreManager
                 string data = inputData.ReadToEnd();
                 String[] attribs = data.Split('&');
                 String response = "";
+                if (attribs.Length > 1)
+                {
+                    String[] auth = attribs[0].Split('=');
+                    if (!m_manager.CheckID(auth[1]))
+                    {
+                        msg = DateTime.Now.ToString() + " : not authorized : " + attribs[0];
+                        Console.WriteLine(msg);
+                        m_log.WriteLine(msg);
+                        p.writeFailure();
+                        p.outputStream.WriteLine("<html><body><h1>test server</h1>");
+                        p.outputStream.WriteLine("<a href=/test>return</a><p>");
+                        p.outputStream.WriteLine("postbody: <pre>{0}</pre>", msg);
+                        p.outputStream.WriteLine("postbody: <pre>{0}</pre>", data);
+                        return;
+                    }
+                }
                 foreach(String command in attribs)
                 {
                     response = m_manager.HandleRequest(command);
