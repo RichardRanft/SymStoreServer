@@ -3,6 +3,8 @@ SymStoreServer
 
 HTTP symbol server/manager:
 Nominally secure - plain-text token-based authentication.
+
+Note : ensure that you don't have anything else on the host trying to use the desired port.
 ```
 //The MIT License (MIT)
 
