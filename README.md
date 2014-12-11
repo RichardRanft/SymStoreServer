@@ -2,7 +2,7 @@ SymStoreServer
 ==============
 
 HTTP symbol server/manager:
-Not secure - there is no authentication.
+Nominally secure - plain-text token-based authentication.
 ```
 //The MIT License (MIT)
 
