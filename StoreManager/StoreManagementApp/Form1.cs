@@ -21,9 +21,9 @@ namespace StoreManagementApp
         public Form1()
         {
             InitializeComponent();
+            m_settings = new CSettings("config.ini");
             if (System.IO.File.Exists("config.ini"))
             {
-                m_settings = new CSettings("config.ini");
                 if (m_settings.LoadSettings())
                 {
                     foreach (KeyValuePair<String, String> attribute in m_settings.GetSection("[Default]"))
@@ -83,10 +83,19 @@ namespace StoreManagementApp
 
         private void httpClient_DownloadServerComplete(object sender, DownloadStringCompletedEventArgs e)
         {
-            tbPostTestResponse.Text += e.Result;
-            createServerItems(e.Result.ToString());
-            if (!btnRefreshServerView.Enabled)
-                btnRefreshServerView.Enabled = true;
+            try
+            {
+                tbPostTestResponse.Text += e.Result;
+                createServerItems(e.Result.ToString());
+                if (!btnRefreshServerView.Enabled)
+                    btnRefreshServerView.Enabled = true;
+            }
+            catch (Exception ex)
+            {
+                tbPostTestResponse.Text += ex.Message;
+                if (ex.InnerException != null)
+                    tbPostTestResponse.Text += Environment.NewLine + ex.InnerException.Message;
+            }
         }
 
         private void createServerItems(String serverTxt)
@@ -132,10 +141,19 @@ namespace StoreManagementApp
 
         private void httpClient_DownloadHistoryComplete(object sender, DownloadStringCompletedEventArgs e)
         {
-            tbPostTestResponse.Text += e.Result;
-            createHistoryItems(e.Result.ToString());
-            if (!btnRefreshHistoryView.Enabled)
-                btnRefreshHistoryView.Enabled = true;
+            try
+            {
+                tbPostTestResponse.Text += e.Result;
+                createHistoryItems(e.Result.ToString());
+                if (!btnRefreshHistoryView.Enabled)
+                    btnRefreshHistoryView.Enabled = true;
+            }
+            catch (Exception ex)
+            {
+                tbPostTestResponse.Text += ex.Message;
+                if (ex.InnerException != null)
+                    tbPostTestResponse.Text += Environment.NewLine + ex.InnerException.Message;
+            }
         }
 
         private void createHistoryItems(String historyTxt)
@@ -192,7 +210,7 @@ namespace StoreManagementApp
         {
             btnDelete.Enabled = false;
             DataGridViewRow row = dataGridViewServer.Rows[m_selectedRow];
-            DataGridViewCell cell = row.Cells[5];
+            DataGridViewCell cell = row.Cells[0];
             String product = @cell.Value.ToString();
             product = product.Replace("\\", "");
             product = product.Replace("\"", "");
@@ -395,8 +413,17 @@ namespace StoreManagementApp
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            m_settings.Set("[Default]", "ADDRESS", tbStoreAddress.Text);
-            m_settings.SaveSettings();
+            try
+            {
+                m_settings.Set("[Default]", "ADDRESS", tbStoreAddress.Text);
+                if (tbUUID.Text != "")
+                    m_settings.Set("[Default]", "UUID", tbUUID.Text);
+                m_settings.SaveSettings();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("{0} : Exception : {1}", DateTime.Now.ToString(), ex.Message);
+            }
             Application.Exit();
         }
 

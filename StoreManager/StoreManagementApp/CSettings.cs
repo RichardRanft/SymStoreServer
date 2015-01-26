@@ -184,33 +184,41 @@ namespace StoreManagementApp
         {
             if (m_dirty)
             {
-                using (StreamWriter writer = new StreamWriter(m_fileName))
+                try
                 {
-                    foreach (KeyValuePair<String, List<KeyValuePair<String, String>>> section in m_attributeList)
+                    using (StreamWriter writer = new StreamWriter(m_fileName))
                     {
-                        String sectionTitle = section.Key;
-                        try
+                        foreach (KeyValuePair<String, List<KeyValuePair<String, String>>> section in m_attributeList)
                         {
-                            writer.WriteLine(sectionTitle);
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine("{0} : Exception : {1}", DateTime.Now.ToString(), e.Message);
-                            return false;
-                        }
-                        foreach (KeyValuePair<String, String> attribute in section.Value)
-                        {
+                            String sectionTitle = section.Key;
                             try
                             {
-                                writer.WriteLine(attribute.Key.ToUpper() + "=" + attribute.Value.ToUpper());
+                                writer.WriteLine(sectionTitle);
                             }
                             catch (Exception e)
                             {
                                 Console.WriteLine("{0} : Exception : {1}", DateTime.Now.ToString(), e.Message);
                                 return false;
                             }
+                            foreach (KeyValuePair<String, String> attribute in section.Value)
+                            {
+                                try
+                                {
+                                    writer.WriteLine(attribute.Key.ToUpper() + "=" + attribute.Value.ToUpper());
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine("{0} : Exception : {1}", DateTime.Now.ToString(), e.Message);
+                                    return false;
+                                }
+                            }
                         }
                     }
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine("{0} : Exception : {1}", DateTime.Now.ToString(), ex.Message);
+                    return false;
                 }
                 m_dirty = false;
             }
