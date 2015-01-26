@@ -53,7 +53,7 @@ namespace StoreManager
             String mailRecip = "";
             String mailSndr = "";
             String mailAddr = "";
-            String emailnotify = "";
+            String emailnotify = "false";
             int ms = 300000;
             if(args.Length < 3)
             {

@@ -211,7 +211,9 @@ namespace StoreManager
             }
             catch(Exception ex)
             {
-                Console.WriteLine("No Reg.txt file found - remote management not available.");
+                String msg = " -- No Reg.txt file found - remote symbol deletion not available." + ex.Message;
+                m_log.WriteLine(msg);
+                Console.WriteLine(msg);
             }
         }
 

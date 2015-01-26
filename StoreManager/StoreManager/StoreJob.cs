@@ -216,6 +216,7 @@ namespace StoreManager
             m_id = rng.Next();
             m_recipient = m_parent.MailRecipient;
             m_sender = m_parent.MailSender;
+            m_notify = m_parent.EmailNotify;
         }
 
         public StoreJob(String recipient)
@@ -225,6 +226,7 @@ namespace StoreManager
             m_id = rng.Next();
             m_recipient = recipient;
             m_sender = m_parent.MailSender;
+            m_notify = m_parent.EmailNotify;
             Complete += new CompletedEventHandler(OnComplete);
         }
 
@@ -236,6 +238,7 @@ namespace StoreManager
             m_id = rng.Next();
             m_recipient = m_parent.MailRecipient;
             m_sender = m_parent.MailSender;
+            m_notify = m_parent.EmailNotify;
         }
 
         public StoreJob(CStoreManager parent, String recipient)
@@ -246,6 +249,7 @@ namespace StoreManager
             m_id = rng.Next();
             m_recipient = recipient;
             m_sender = m_parent.MailSender;
+            m_notify = m_parent.EmailNotify;
             Complete += new CompletedEventHandler(OnComplete);
         }
 
