@@ -64,6 +64,7 @@ namespace StoreManager
 
         private String m_recipient;
         private String m_sender;
+        private bool m_notify;
         private CStoreManager m_parent;
         private String m_processLog;
         private String m_httpLog;
@@ -82,6 +83,18 @@ namespace StoreManager
         [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
         public extern static bool CloseHandle(IntPtr handle);
 
+        public bool EmailNotify
+        {
+            get
+            {
+                return m_notify;
+            }
+            set
+            {
+                m_notify = value;
+            }
+        }
+        
         public String Command
         {
             get
@@ -445,6 +458,8 @@ namespace StoreManager
 
         public void sendNotification()
         {
+            if (!m_notify)
+                return;
             switch(m_command)
             {
                 case "add":
@@ -458,6 +473,8 @@ namespace StoreManager
 
         private void sendAddNotification()
         {
+            if (!m_notify)
+                return;
             String changeFolder = m_fileArgs.FullPath;
             String[] parts = changeFolder.Split('\\');
             String releasePath = parts[parts.Length - 1];
@@ -522,6 +539,8 @@ namespace StoreManager
 
         private void sendDelNotification()
         {
+            if (!m_notify)
+                return;
             String messageBody;
             using (StreamReader infile = new StreamReader("DelTemplate.html"))
             {
@@ -560,6 +579,8 @@ namespace StoreManager
 
         private void sendErrorNotification(MailMessage failMail, String msg)
         {
+            if (!m_notify)
+                return;
             MailMessage message = new MailMessage(failMail.Sender.ToString(), "rranft@ballytech.com");
             message.Subject = "Delivery Alert Failure Notification";
             String msgBody = "Date : " + DateTime.Now + " " + TimeZone.CurrentTimeZone.StandardName + Environment.NewLine + Environment.NewLine;

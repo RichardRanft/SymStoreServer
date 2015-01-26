@@ -50,6 +50,10 @@ namespace StoreManager
             String storePath = "";
             String interval = "300000";
             String address = "127.0.0.1:80";
+            String mailRecip = "";
+            String mailSndr = "";
+            String mailAddr = "";
+            String emailnotify = "";
             int ms = 300000;
             if(args.Length < 3)
             {
@@ -78,6 +82,22 @@ namespace StoreManager
                                 case "address":
                                     Console.WriteLine(" -- ADDRESS = {0}", attribute.Value);
                                     address = attribute.Value;
+                                    break;
+                                case "mailrecipient":
+                                    Console.WriteLine(" -- MAILRECIPIENT = {0}", attribute.Value);
+                                    mailRecip = attribute.Value;
+                                    break;
+                                case "mailsender":
+                                    Console.WriteLine(" -- MAILSENDER = {0}", attribute.Value);
+                                    mailSndr = attribute.Value;
+                                    break;
+                                case "mailclient":
+                                    Console.WriteLine(" -- MAILCLIENT = {0}", attribute.Value);
+                                    mailAddr = attribute.Value;
+                                    break;
+                                case "emailnotify":
+                                    Console.WriteLine(" -- EMAILNOTIFY = {0}", attribute.Value);
+                                    emailnotify = attribute.Value;
                                     break;
                             }
                         }
@@ -135,6 +155,37 @@ namespace StoreManager
             Queue<StoreJob> SharedQueue = new Queue<StoreJob>();
             CJobConsumer consumer = new CJobConsumer(SharedQueue);
             CStoreManager manager = new CStoreManager(watchPath, storePath, SharedQueue);
+            bool notify = false;
+            try
+            {
+                notify = Convert.ToBoolean(emailnotify);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("EMAILNOTIFY Value Not Valid : " + ex.Message);
+                return 1;
+            }
+            if (notify)
+            {
+                String[] smtpAddr = mailAddr.Split(':');
+                if (smtpAddr.Length < 2)
+                    return 1;
+                int smtpPort = 0;
+                try
+                {
+                    smtpPort = Convert.ToInt32(smtpAddr[1]);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Mail Address Port Invalid : " + ex.Message);
+                    return 1;
+                }
+                SmtpClient client = new SmtpClient(smtpAddr[0], smtpPort);
+                manager.MailClient = client;
+            }
+            manager.EmailNotify = notify;
+            manager.MailRecipient = mailRecip;
+            manager.MailSender = mailSndr;
             httpServer.Manager = manager;
             consumer.Log = manager.Log;
             httpServer.Log = manager.Log;

@@ -64,6 +64,31 @@ namespace StoreManager
         private CLog m_log;
         private int m_depth;
         private CJobConsumer m_consumer;
+        bool m_emailNotify;
+
+        public bool EmailNotify
+        {
+            get
+            {
+                return m_emailNotify;
+            }
+            set
+            {
+                m_emailNotify = value;
+            }
+        }
+
+        public SmtpClient MailClient
+        {
+            get
+            {
+                return m_mailClient;
+            }
+            set
+            {
+                m_mailClient = value;
+            }
+        }
 
         public CLog Log
         {
@@ -172,14 +197,22 @@ namespace StoreManager
 
         private void readRegTxt()
         {
-            StreamReader reader = new StreamReader(m_storePath + "\\reg.txt");
-            String id = reader.ReadLine();
-            while(id != null && !id.Equals(""))
+            StreamReader reader = null;
+            try
             {
-                m_registeredManagers.Add(id);
-                id = reader.ReadLine();
+                reader = new StreamReader(m_storePath + "\\reg.txt");
+                String id = reader.ReadLine();
+                while (id != null && !id.Equals(""))
+                {
+                    m_registeredManagers.Add(id);
+                    id = reader.ReadLine();
+                }
+                reader.Close();
             }
-            reader.Close();
+            catch(Exception ex)
+            {
+                Console.WriteLine("No Reg.txt file found - remote management not available.");
+            }
         }
 
         public bool CheckID(String id)
@@ -202,14 +235,6 @@ namespace StoreManager
             rng = new Random();
 
             m_pathMap = new List<Tuple<String, String>>();
-
-#if DEBUG
-            m_mailRecipient = "rranft@ballytech.com";
-#else
-            m_mailRecipient = "ENG-SCM@ballytech.com";
-#endif
-            m_mailSender = "SRES_SymbolStore@ballytech.com";
-            m_mailClient = new SmtpClient("mail.ballytech.net", 25);
 
             m_jobQueue = new Queue<StoreJob>();
 
