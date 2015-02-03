@@ -1,0 +1,8 @@
+StoreManager/StoreManager/bin/
+StoreManager/StoreManagement/bin/
+StoreManager/StoreManager/obj/
+StoreManager/StoreManagement/obj/
+*.user
+*.suo
+*.log
+*.nupkg
